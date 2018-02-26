@@ -19,3 +19,17 @@ Right now redis is statically linked against glibc. Linking against
 musl should bring the size of the exe down to less than 1MB, it
 doesn't seem straightforward to do this with nix though, see
 https://github.com/NixOS/nixpkgs/issues/25178.
+
+## Building
+You'll need [nix](https://nixos.org/nix/) installed. Once installed run:
+
+```
+$ nix-build
+```
+
+If everything was successful:
+
+```
+$ docker load < result
+```
+The image should be loaded with the name `redis`.
