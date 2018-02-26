@@ -2,6 +2,14 @@
 
 with pkgs;
 let
+  passwd = pkgs.stdenv.mkDerivation {
+    name = "passwd";
+    src = ./.;
+    installPhase = ''
+      mkdir -p $out/etc
+      echo "redis:x:1000:1000:,,,:/home/redis:/bin/bash" > $out/etc/passwd
+    '';
+  };
 
   redis_3_0_7 = pkgs.stdenv.mkDerivation {
     name = "redis-test";
@@ -29,9 +37,10 @@ let
 
   redisImage = redis: baseImage: dockerTools.buildImage {
     name = "redis";
+    contents = [ passwd ];
     config = {
-      Add = { "passwd" = "/etc/passwd"; };
       Cmd = [ "${redis_3_0_7}/bin/redis-server" ];
+      User = "redis";
       ExposedPorts = {
         "6379/tcp" = {};
       };
